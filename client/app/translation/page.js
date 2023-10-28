@@ -4,10 +4,10 @@ import React from 'react';
 const FileUploadDiv = () => {
   return (
     <div className=' h-[100%] w-[100%] flex flex-col justify-center items-center'>
-<div className="w-[40%] h-[60%] border-2 border-dotted border-gray-300 rounded-lg bg-gray-100 text-center flex flex-col justify-center items-center">
-      <h2 className="text-xl font-semibold mt-10">File Upload</h2>
-      <label className="h-[100%] w-[100%] flex flex-col justify-center items-center">
-        <div className="cursor-pointer border-2 border-dotted h-[60%] w-[60%] border-gray-400 p-4 rounded-lg bg-white">
+<div className="w-[40%] h-[60%] border-[3px] border-dotted border-gray-300 rounded-lg bg-gray-100 text-center flex flex-col justify-center items-center ">
+      <h2 className="text-xl font-semibold ">File Upload</h2>
+      <label className="flex flex-col justify-center items-center mt-10 ">
+        <div className="cursor-pointer border-2 border-dotted h-[100%] w-[100%] border-gray-400 px-4 rounded-lg bg-white py-[30px]">
           {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-16 w-16 mx-auto text-gray-500"
@@ -38,7 +38,15 @@ const FileUploadDiv = () => {
         </div>
         
       </label>
+      <div className='w-[100%]'>
+        
+        </ div>
+      
+    
     </div>
+    <button className=" mt-[20px] w-[15%] px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
+      Upload
+    </button>
     </div>
     
   );

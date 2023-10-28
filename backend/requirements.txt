@@ -8,3 +8,11 @@ reportlab
 md2pdf
 cloudinary
 pdfminer2
+flask==2.2.3
+flask_restful
+flask_mongoengine
+flask_jwt_extended
+flask_cors
+englisttohindi
+llama_index
+sentence-transformers

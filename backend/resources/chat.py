@@ -24,8 +24,6 @@ from llama_index import (
 )
 from llama_index.memory import ChatMemoryBuffer
 
-os.environ["OPENAI_API_KEY"] = "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"
-
 embed_model = LangchainEmbedding(HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2'))
 # llm=HuggingFaceHub(repo_id="distilbert-base-uncased-distilled-squad", task="summarization", huggingfacehub_api_token="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")
 service_context = ServiceContext.from_defaults(embed_model=embed_model)
@@ -193,5 +191,5 @@ def add_message(args):
     })
 
         
-
-        
+if __name__ == '__main__':
+    app.run(debug=True)

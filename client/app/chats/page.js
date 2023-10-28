@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
 
@@ -12,53 +12,54 @@ const AllChats = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [fileInputValue, setFileInputValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [allChats, setAllChats] = useState([]);
 
-  const allChats = [
-    {
-      id: "0f75f3af-9f26-4f9d-9fe8-cabbdee853a8",
-      title: "Marriage",
-      tags: ["Marriage", "Relationships", "Family"],
-      description:
-        "A case involving a couple planning to get married and seeking legal advice on marriage contracts, prenuptial agreements, and related family matters.",
-    },
-    {
-      id: "1a23b4c5-6d78-9e01-2f3g-4h56i7j8k90l",
-      title: "Child Custody Battle",
-      tags: ["Custody", "Divorce", "Children"],
-      description: "A case involving a custody dispute after a divorce.",
-    },
-    {
-      id: "2mnopq3r-4stu-5vw6x7-yz89a0b1c2",
-      title: "Employment Discrimination",
-      tags: ["Employment", "Discrimination", "Workplace"],
-      description: "An employment discrimination case at a workplace.",
-    },
-    {
-      id: "3d4e56f7g-89hi01-j2klm3no-4pqrs5tu6",
-      title: "Personal Injury Lawsuit",
-      tags: ["Personal Injury", "Accident", "Legal"],
-      description: "A legal case involving personal injury from an accident.",
-    },
-    {
-      id: "4v5w67x8y-9z01a2b3c4-d5e6f7g8h90",
-      title: "Real Estate Dispute",
-      tags: ["Real Estate", "Property", "Legal"],
-      description: "A legal dispute related to real estate and property.",
-    },
-    {
-      id: "5ij6kl7mn-89op01q2r-3s4tu5v6wx7",
-      title: "Criminal Defense",
-      tags: ["Criminal Defense", "Legal", "Crime"],
-      description:
-        "A legal case involving criminal defense and criminal charges.",
-    },
-    {
-      id: "6yz7ab8cd-9ef01g2hi-3jk4lm5no6p7",
-      title: "Business Contract Dispute",
-      tags: ["Business", "Contract", "Legal"],
-      description: "A legal dispute related to a business contract.",
-    },
-  ];
+  // const allChats = [
+  //   {
+  //     id: "0f75f3af-9f26-4f9d-9fe8-cabbdee853a8",
+  //     title: "Marriage",
+  //     tags: ["Marriage", "Relationships", "Family"],
+  //     description:
+  //       "A case involving a couple planning to get married and seeking legal advice on marriage contracts, prenuptial agreements, and related family matters.",
+  //   },
+  //   {
+  //     id: "1a23b4c5-6d78-9e01-2f3g-4h56i7j8k90l",
+  //     title: "Child Custody Battle",
+  //     tags: ["Custody", "Divorce", "Children"],
+  //     description: "A case involving a custody dispute after a divorce.",
+  //   },
+  //   {
+  //     id: "2mnopq3r-4stu-5vw6x7-yz89a0b1c2",
+  //     title: "Employment Discrimination",
+  //     tags: ["Employment", "Discrimination", "Workplace"],
+  //     description: "An employment discrimination case at a workplace.",
+  //   },
+  //   {
+  //     id: "3d4e56f7g-89hi01-j2klm3no-4pqrs5tu6",
+  //     title: "Personal Injury Lawsuit",
+  //     tags: ["Personal Injury", "Accident", "Legal"],
+  //     description: "A legal case involving personal injury from an accident.",
+  //   },
+  //   {
+  //     id: "4v5w67x8y-9z01a2b3c4-d5e6f7g8h90",
+  //     title: "Real Estate Dispute",
+  //     tags: ["Real Estate", "Property", "Legal"],
+  //     description: "A legal dispute related to real estate and property.",
+  //   },
+  //   {
+  //     id: "5ij6kl7mn-89op01q2r-3s4tu5v6wx7",
+  //     title: "Criminal Defense",
+  //     tags: ["Criminal Defense", "Legal", "Crime"],
+  //     description:
+  //       "A legal case involving criminal defense and criminal charges.",
+  //   },
+  //   {
+  //     id: "6yz7ab8cd-9ef01g2hi-3jk4lm5no6p7",
+  //     title: "Business Contract Dispute",
+  //     tags: ["Business", "Contract", "Legal"],
+  //     description: "A legal dispute related to a business contract.",
+  //   },
+  // ];
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -98,9 +99,27 @@ const AllChats = () => {
           Router.push(`/chat/${result?.data?.index_id}`);
         })
         .catch((error) => console.log("error", error));
-      setLoading(false);
-    }
+      }
   };
+
+
+  const fetchAllChats = async () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch("http://localhost:5000/chat", requestOptions)
+      .then(response => response.json())
+      .then(result => setAllChats(result.data))
+      .catch(error => console.log('error', error));
+  }
+
+  useEffect(() => {
+    fetchAllChats();
+  }, []);
+
+
   console.log(loading);
   return (
     <div style={{ overflow: "auto", maxHeight: "100vh" }}>
@@ -131,12 +150,12 @@ const AllChats = () => {
 
         <div className="w-[85%] mt-8">
           {allChats.map((chat) => (
-            <Link href="/chat">
+            <Link href={`/chat/${chat.index_id}`}>
               <div className="bg-gray-100 border-[1px] border-blue-100 p-4 m-4 rounded-lg hover:bg-gray-200 hover:border-gray-300 ">
                 <h2 className="text-xl font-semibold">{chat.title}</h2>
                 <div className="text-gray-600 my-2">
                   <div className="flex flex-row gap-x-2">
-                    {chat.tags.map((tag, index) => (
+                    {chat.tags.split(',').map((tag, index) => (
                       <div
                         key={index}
                         className="bg-blue-200 text-blue-700 rounded-md px-2 py-[2px] my-1"
@@ -145,7 +164,7 @@ const AllChats = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="mb-2">{chat.description}</div>
+                  <div className="mb-2">{chat.summary}</div>
                 </div>
               </div>
             </Link>

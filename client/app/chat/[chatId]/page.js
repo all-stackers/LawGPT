@@ -24,15 +24,60 @@ const Chat = () => {
     }
   };
 
+  const loadData = async () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(`http://localhost:5000/chat?index_id=${id}`, requestOptions)
+      .then(response => response.json())
+      .then(result => setChatMessages(result.data.messages))
+      .catch(error => console.log('error', error));
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const handleSendMessage = () => {
     if (inputMessage.trim() === "") return;
     const newMessage = {
-      id: chatMessages.length + 1,
-      text: inputMessage,
+      message: inputMessage,
       sender: "user",
     };
     setChatMessages([...chatMessages, newMessage]);
     setInputMessage("");
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "index_id": id,
+      "message": {
+        "message": inputMessage,
+        "sender": "user"
+      }
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:5000/chat?add=True", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        const newMessage2 = {
+          message: result.data,
+          sender: "agent"
+        }
+        setChatMessages([...chatMessages, newMessage, newMessage2]);
+      })
+      .catch(error => console.log('error', error));
+
   };
 
   return (
@@ -41,9 +86,9 @@ const Chat = () => {
         ref={chatContainerRef}
         className="flex-1 pb-[150px] bg-[#fdfdfd] overflow-y-auto"
       >
-        {chatMessages.map((message, index) => (
+        {chatMessages.length >0 && chatMessages.map((message, index) => (
           <div
-            key={message.id}
+            key={message.message}
             className={` py-8 w-[100%] border border-[#e5e5e5] border-solid flex flex-row ${
               index % 2 === 0
                 ? "bg-white text-gray-800 font-medium"
@@ -57,7 +102,7 @@ const Chat = () => {
                     <img src="/assets/icon/user.png" />
                   </div>
                   <div className="flex w-[90%] flex-row justify-between	">
-                    <div className="w-[95%]"> {message.text}</div>
+                    <div className="w-[95%]"> {message.message}</div>
                   </div>
                 </>
               ) : (
@@ -66,7 +111,7 @@ const Chat = () => {
                     <img src="/assets/icon/brain.png" />
                   </div>
                   <div className="flex w-[90%] flex-row justify-between	">
-                    <div className="w-[95%]"> {message.text}</div>
+                    <div className="w-[95%]"> {message.message}</div>
                     <div>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

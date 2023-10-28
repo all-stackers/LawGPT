@@ -45,4 +45,14 @@ class Chat(db.Document):
         except Exception as e:
             print(e)
             return {"error": True, "message": str(e)}
+        
+    @classmethod
+    def get_all_chat(cls):
+        try:
+            documents = cls.objects()
+            return {"error": False, "data": documents}
+        
+        except Exception as e:
+            print(e)
+            return {"error": True, "message": str(e)}
 

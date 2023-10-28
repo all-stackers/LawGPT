@@ -60,13 +60,25 @@ class Chat(Resource):
 
             return add_message(args)
         
-    # def get(self):
-    #     index_id = request.args.get('index_id')
+    def get(self):
+        index_id = request.args.get('index_id')
 
-    #     if index_id:
-    #         response = ChatModel.get_chat_index_id(index_id)
-    #         if response["error"]:
-    #             return {""}
+        if index_id:
+            response = ChatModel.get_chat_index_id(index_id)
+            if response["error"]:
+                return response
+            
+            chat = response['data']
+
+            return jsonify({"error": False, "data": chat})
+        
+        response = ChatModel.get_all_chat()
+        if response["error"]:
+            return response
+        
+        chats = response['data']
+
+        return jsonify({"error": False, "data": chats})
 
 def create_chat():
     if 'file' not in request.files:

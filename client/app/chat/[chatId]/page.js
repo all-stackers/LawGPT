@@ -1,10 +1,15 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 const Chat = () => {
+  const params = useParams();
+
   const [chatMessages, setChatMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const chatContainerRef = useRef(null);
+  const id = parseInt(params.chatId);
+  // console.log(params.chatId);
 
   useEffect(() => {
     // Scroll to the bottom when chatMessages change

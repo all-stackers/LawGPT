@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ScaleLoader } from "react-spinners";
 
 const AllChats = () => {
+  const Router = useRouter();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pdfFile, setPdfFile] = useState(null);
   const [fileInputValue, setFileInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const allChats = [
     {
@@ -71,7 +76,10 @@ const AllChats = () => {
   };
 
   const uploadPdfFormData = () => {
+    setLoading(true);
     if (pdfFile) {
+      console.log(loading);
+
       var formdata = new FormData();
       formdata.append("file", pdfFile, "[PROXY]");
 
@@ -82,12 +90,18 @@ const AllChats = () => {
       };
 
       fetch("http://localhost:5000/chat?create=True", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result?.data?.index_id);
+          setLoading(false);
+
+          Router.push(`/chat/${result?.data?.index_id}`);
+        })
         .catch((error) => console.log("error", error));
+      setLoading(false);
     }
   };
-
+  console.log(loading);
   return (
     <div style={{ overflow: "auto", maxHeight: "100vh" }}>
       <div className="py-4 flex flex-col items-center">
@@ -139,52 +153,60 @@ const AllChats = () => {
         </div>
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center z-100 drop-shadow-2xl">
-            <div className="modal-container fixed top-0 left-0 w-[100%] h-[100% bg-[#000000a3]">
+            <div className="fixed top-0 left-0 w-[100%] h-[100%] bg-[#000000a3]">
               <div className="bg-white w-[500px] mx-auto my-[20vh] rounded-lg shadow-lg p-4">
-                <div className="flex justify-between">
-                  <h2 className="text-xl font-bold">Upload PDF</h2>
+                <div>
+                  <div className="flex justify-between">
+                    <h2 className="text-xl font-bold">Upload PDF</h2>
 
-                  <button onClick={closeModal}>
-                    <img
-                      className="h-[20px]"
-                      src={`/assets/icon/close.svg`}
-                      alt="navicon"
-                    />
-                  </button>
-                </div>
-
-                <p>Upload PDF and ask queries.</p>
-                <label className="flex flex-col justify-center items-center mt-[20px] ">
-                  <div className="cursor-pointer border-2 border-dotted w-[90%] h-[200px] border-gray-400 px-4 rounded-lg bg-white py-[30px]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-16 w-16 mx-auto text-gray-500"
-                      height="24"
-                      fill="gray"
-                      viewBox="0 -960 960 960"
-                      stroke="currentColor"
-                    >
-                      <path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H520q-33 0-56.5-23.5T440-240v-206l-64 62-56-56 160-160 160 160-56 56-64-62v206h220q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41h100v80H260Zm220-280Z" />
-                    </svg>
-                    <p className="text-gray-500 mt-2 w-fit mx-auto">
-                      Choose a file or drag it here
-                    </p>
-                    <input
-                      className=" hidden"
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleFileChange}
-                    />
+                    <button onClick={closeModal}>
+                      <img
+                        className="h-[20px]"
+                        src={`/assets/icon/close.svg`}
+                        alt="navicon"
+                      />
+                    </button>
                   </div>
-                </label>
-                <p>{fileInputValue}</p>
-                <div className="flex flex-row justify-center">
-                  <button
-                    onClick={uploadPdfFormData}
-                    className="bg-blue-500 text-white px-8 py-1 mt-4 rounded"
-                  >
-                    Upload
-                  </button>
+                  <p>Upload PDF and ask queries.</p>
+                  <label className="flex flex-col justify-center items-center mt-[20px] ">
+                    <div className="cursor-pointer border-2 border-dotted w-[90%] h-[200px] border-gray-400 px-4 rounded-lg bg-white py-[30px]">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-16 w-16 mx-auto text-gray-500"
+                        height="24"
+                        fill="gray"
+                        viewBox="0 -960 960 960"
+                        stroke="currentColor"
+                      >
+                        <path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H520q-33 0-56.5-23.5T440-240v-206l-64 62-56-56 160-160 160 160-56 56-64-62v206h220q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41h100v80H260Zm220-280Z" />
+                      </svg>
+                      <p className="text-gray-500 mt-2 w-fit mx-auto">
+                        Choose a file or drag it here
+                      </p>
+                      <input
+                        className=" hidden"
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  </label>
+                  <p>{fileInputValue}</p>
+                  <div className="flex flex-row justify-center">
+                    {loading ? (
+                      <div className="mt-4">
+                        <ScaleLoader color="#7C3AED" />
+                        Hold on!
+                      </div>
+                    ) : (
+                      <button
+                        onClick={uploadPdfFormData}
+                        className="bg-blue-500 text-white px-8 py-1 mt-4 rounded"
+                      >
+                        Upload
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

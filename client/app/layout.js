@@ -10,13 +10,10 @@ export const metadata = {
 const RootLayout = ({ children }) => (
   <html lang="en">
     <body>
-      <div className="main"></div>
-
-      <Navbar />
-      <main>
-        <div className="gradient" />
-        {children}
-      </main>
+      <div className="flex flex-row relative">
+        <Navbar />
+        <main className="flex flex-col flex-grow relative">{children}</main>
+      </div>
     </body>
   </html>
 );

@@ -2,6 +2,10 @@
 import { useState } from "react";
 
 const Home = () => {
-  return <section className="">Hi</section>;
+  return (
+    <section className="">
+      <h1>Home</h1>
+    </section>
+  );
 };
 export default Home;

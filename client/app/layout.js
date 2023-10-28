@@ -12,7 +12,7 @@ const RootLayout = ({ children }) => (
     <body>
       <div className="flex flex-row relative">
         <Navbar />
-        <main className="flex flex-col flex-grow relative p-5 pt-8">{children}</main>
+        <main className="flex flex-col flex-grow relative">{children}</main>
       </div>
     </body>
   </html>

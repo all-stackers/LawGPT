@@ -1,0 +1,10 @@
+streamlit
+python-dotenv
+pyngrok
+fastapi
+nest-asyncio
+pydantic
+reportlab
+md2pdf
+cloudinary
+pdfminer2

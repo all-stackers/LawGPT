@@ -1,6 +1,13 @@
-import React from "react";
+"use client";
+
+import Link from "next/link";
+import React, { useState } from "react";
 
 const AllChats = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [fileInputValue, setFileInputValue] = useState("");
+
   const allChats = [
     {
       id: "0f75f3af-9f26-4f9d-9fe8-cabbdee853a8",
@@ -47,34 +54,140 @@ const AllChats = () => {
       description: "A legal dispute related to a business contract.",
     },
   ];
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setPdfFile(selectedFile);
+      setFileInputValue(selectedFile.name);
+    }
+  };
+
+  const uploadPdfFormData = () => {
+    if (pdfFile) {
+      var formdata = new FormData();
+      formdata.append("file", pdfFile, "[PROXY]");
+
+      var requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://localhost:5000/chat?create=True", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+    }
+  };
 
   return (
     <div style={{ overflow: "auto", maxHeight: "100vh" }}>
-      <div className="px-5 py-2 flex flex-row justify-between">
-        <p className="text-[#1772ff]">Chats /</p>
-      </div>
       <div className="py-4 flex flex-col items-center">
-        <h1 className="text-4xl font-bold">All Chat Records</h1>
+        <div className="py-4 flex flex-row items-center w-[85%] justify-between">
+          <h1 className="text-4xl font-bold">All Chat Records</h1>
+          <button
+            onClick={openModal}
+            className="px-4 py-2 flex flex-row gap-x-2 border rounded-lg"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            New Chat
+          </button>
+        </div>
+
         <div className="w-[85%] mt-8">
           {allChats.map((chat) => (
-            <div className="bg-gray-100 p-4 m-4 rounded-lg">
-              <h2 className="text-xl font-semibold">{chat.title}</h2>
-              <div className="text-gray-600 my-2">
-                <div className="flex flex-row gap-x-2">
-                  {chat.tags.map((tag, index) => (
-                    <div
-                      key={index}
-                      className="bg-blue-200 text-blue-700 rounded-full px-2 py-1 my-1"
-                    >
-                      {tag}
-                    </div>
-                  ))}
+            <Link href="/chat">
+              <div className="bg-gray-100 border-[1px] border-blue-100 p-4 m-4 rounded-lg hover:bg-gray-200 hover:border-gray-300 ">
+                <h2 className="text-xl font-semibold">{chat.title}</h2>
+                <div className="text-gray-600 my-2">
+                  <div className="flex flex-row gap-x-2">
+                    {chat.tags.map((tag, index) => (
+                      <div
+                        key={index}
+                        className="bg-blue-200 text-blue-700 rounded-md px-2 py-[2px] my-1"
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mb-2">{chat.description}</div>
                 </div>
-                <div className="mb-2">{chat.description}</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-100 drop-shadow-2xl">
+            <div className="modal-container">
+              <div className="bg-white rounded-lg shadow-lg p-4">
+                <div className="flex justify-end">
+                  <button
+                    onClick={closeModal}
+                    className="bg-red-500 text-white px-2 py-1 mt-4 rounded"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <h2 className="text-xl font-bold">Upload PDF</h2>
+                <p>Upload PDF and ask queries.</p>
+                <label className="flex flex-col justify-center items-center mt-10 ">
+                  <div className="cursor-pointer border-2 border-dotted h-[100%] w-[100%] border-gray-400 px-4 rounded-lg bg-white py-[30px]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-16 w-16 mx-auto text-gray-500"
+                      height="24"
+                      fill="gray"
+                      viewBox="0 -960 960 960"
+                      stroke="currentColor"
+                    >
+                      <path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H520q-33 0-56.5-23.5T440-240v-206l-64 62-56-56 160-160 160 160-56 56-64-62v206h220q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41h100v80H260Zm220-280Z" />
+                    </svg>
+                    <p className="text-gray-500 mt-2">
+                      Choose a file or drag it here
+                    </p>
+                    <input
+                      className=" hidden"
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                </label>
+                <p>{fileInputValue}</p>
+                <div className="flex flex-row justify-center">
+                  <button
+                    onClick={uploadPdfFormData}
+                    className="bg-blue-500 text-white px-2 py-1 mt-4 rounded"
+                  >
+                    Upload
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

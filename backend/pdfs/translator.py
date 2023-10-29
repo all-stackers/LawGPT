@@ -140,7 +140,7 @@ def process_pdf(pdf_path, out_path, src_lang):
   print(f"PDF saved to {translated_pdf_path}")
 
 data = [
-#     {"name": "AFFAIRE Aak turkiye.pdf", "lang": "fr_XX"},
+    {"name": "AFFAIRE Aak turkiye.pdf", "lang": "fr_XX"},
     {"name": "AFFAIRE AVCIOgLU c turkiye.pdf", "lang": "fr_XX"},
     {"name": "AFFAIRE CP ET MN c FRANCE.pdf", "lang": "fr_XX"},
     {"name": "AFFAIRE JALOUD c PAYS-BAS.pdf", "lang": "fr_XX"},

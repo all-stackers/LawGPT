@@ -16,3 +16,4 @@ flask_cors
 englisttohindi
 llama_index
 sentence-transformers
+w3storage

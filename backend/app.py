@@ -13,6 +13,7 @@ import os
 from englisttohindi.englisttohindi import EngtoHindi
 from resources.translation import Translation
 from resources.chat import Chat
+from resources.pdf import Pdf
 from resources.askai import AskAI
 from resources.ocrAI import OCR as OCRAI
 
@@ -32,6 +33,8 @@ api.add_resource(Chat, "/chat")
 api.add_resource(AskAI, "/askai")
 api.add_resource(OCRAI, "/ai/ocr")
 
+
+api.add_resource(Pdf, "/pdf")
 
 API_KEY = os.environ.get('OCR_API_KEY')
 OCR_SPACE_ENDPOINT = 'https://api.ocr.space/parse/image'

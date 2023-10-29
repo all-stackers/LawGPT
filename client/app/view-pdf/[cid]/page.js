@@ -1,12 +1,18 @@
 "use client";
-
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
 
 const PDFViewer = () => {
+  const params = useParams();
   const [chatMessages, setChatMessages] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [askingAI, setAskingAI] = useState(false);
+  const cid = params.cid;
+
+  const cid_to_url = (cid) => `https://${cid}.ipfs.dweb.link`
+  console.log(cid_to_url(cid));
+
 
   const onEnterPress = async (event) => {
     if (event.key === "Enter") {
@@ -41,13 +47,16 @@ const PDFViewer = () => {
       })
       .catch((error) => console.log("error", error));
   };
+
   return (
     <div className="flex flex-wrap">
       <div className="w-full md:w-7/12 p-4 h-full">
         <iframe
-          src="https://bafkreiccn74vexqlat2kz32i4zo75cd34ihkgaanatrppnjl6l42z46cuy.ipfs.dweb.link"
+          src={cid_to_url(cid)}
           width="100%"
-          height="530"
+          style={{
+            height: "95vh",
+          }}
           frameBorder="0"
           scrolling="no"
         />
@@ -92,3 +101,5 @@ const PDFViewer = () => {
 };
 
 export default PDFViewer;
+
+

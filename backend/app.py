@@ -13,14 +13,12 @@ import os
 from englisttohindi.englisttohindi import EngtoHindi
 from resources.translation import Translation
 from resources.chat import Chat
+from resources.askai import AskAI
+from resources.ocrAI import OCR as OCRAI
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-
-# app.config["JWT_SECRET_KEY"] = "all_stackers_going_to_win_hackathon"
-
-# jwt = JWTManager(app)
 
 DB_URI = os.getenv("MONGODB_URI")
 
@@ -31,14 +29,15 @@ db.init_app(app)
 api.add_resource(Translation, "/translation")
 
 api.add_resource(Chat, "/chat")
+api.add_resource(AskAI, "/askai")
+api.add_resource(OCRAI, "/ai/ocr")
+
 
 API_KEY = os.environ.get('OCR_API_KEY')
 OCR_SPACE_ENDPOINT = 'https://api.ocr.space/parse/image'
 
-
-
 @app.route('/ocr', methods=['POST'])
-def ocr():
+def ocrOmkar():
     if 'image' not in request.files:
         return jsonify({"error": "No image provided"}), 400
 

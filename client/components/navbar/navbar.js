@@ -25,6 +25,11 @@ const Navbar = () => {
           logo="translate.svg"
           text="Translate & Save PDF"
         />
+        <Navlinks
+          link="ocr"
+          logo="scanner.svg"
+          text="OCR Images"
+        />
         <Navlinks link="query-chat" logo="query.svg" text="Query" />
       </div>
 

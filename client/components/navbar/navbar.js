@@ -19,11 +19,16 @@ const Navbar = () => {
 
       <div className="flex flex-col gap-y-[12px] text-[14px] mt-[40px]">
         <Navlinks link="chats" logo="chat.svg" text="Chats" />
-        <Navlinks link="AskAi" logo="ai.svg" text="Ask AI" />
+        <Navlinks link="askai" logo="ai.svg" text="Ask AI" />
         <Navlinks
           link="translation"
           logo="translate.svg"
           text="Translate & Save PDF"
+        />
+        <Navlinks
+          link="ocr"
+          logo="scanner.svg"
+          text="OCR Images"
         />
         <Navlinks link="query-chat" logo="query.svg" text="Query" />
       </div>

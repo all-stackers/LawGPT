@@ -13,6 +13,7 @@ import os
 from englisttohindi.englisttohindi import EngtoHindi
 from resources.translation import Translation
 from resources.chat import Chat
+from resources.pdf import Pdf
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,6 +32,8 @@ db.init_app(app)
 api.add_resource(Translation, "/translation")
 
 api.add_resource(Chat, "/chat")
+
+api.add_resource(Pdf, "/pdf")
 
 API_KEY = os.environ.get('OCR_API_KEY')
 OCR_SPACE_ENDPOINT = 'https://api.ocr.space/parse/image'

@@ -113,8 +113,6 @@ def create_chat():
     random_number = random.randint(1000, 9999)
     index.storage_context.persist(f"indexes/{random_number}/")
 
-    index.as_chat_engine()
-
     memory = ChatMemoryBuffer.from_defaults(token_limit=1500)
 
     engine = index.as_chat_engine(
@@ -202,6 +200,3 @@ def add_message(args):
         "data": output.response
     })
 
-        
-if __name__ == '__main__':
-    app.run(debug=True)

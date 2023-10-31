@@ -1,12 +1,20 @@
 from mongo_engine import db
+from mongoengine import Document, StringField, IntField
 
 class PDF(db.Document):
-    id = db.StringField(required=True)
-    name = db.StringField(required=True)
-    language = db.StringField(required=True)
-    summary = db.StringField(required=True)
-    url = db.StringField(required=True)
-    category = db.StringField(required=True)
+    pdf_name = StringField(required=True)
+    original_file_cid = StringField(required=True)
+    original_file_url = StringField(required=True)
+    translated_file_cid = StringField(required=True)
+    translated_file_url = StringField(required=True)
+    chat_id = IntField(required=False)
+
+    # pdf_name: db.StringField(required=True)
+    # original_file_cid: db.StringField(required=True)
+    # original_file_url: db.StringField(required=True)
+    # translated_file_cid: db.StringField(required=True)
+    # translated_file_url: db.StringField(required=True)
+    # chat_id: db.IntField(required=False)
 
     @classmethod
     def get_all(cls):
@@ -28,9 +36,18 @@ class PDF(db.Document):
             return {"error": True, "message": "PDF not found"}
         
     @classmethod
-    def add(cls, args):
+    def add(cls, pdf_name, original_file_cid, original_file_url, translated_file_cid, translated_file_url, chat_id):
         try:
-            pdf = cls(**args).save()
+            pdf = cls(
+                pdf_name=pdf_name,
+                original_file_cid=original_file_cid,
+                original_file_url=original_file_url,
+                translated_file_cid=translated_file_cid,
+                translated_file_url=translated_file_url,
+                chat_id=chat_id
+            )
+            print(pdf)
+            pdf.save()
             return {"error": False, "data": pdf}
         
         except Exception as e:
